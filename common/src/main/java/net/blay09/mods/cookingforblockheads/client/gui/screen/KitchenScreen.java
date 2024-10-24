@@ -5,7 +5,6 @@ import net.blay09.mods.balm.mixin.AbstractContainerScreenAccessor;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.client.gui.SortButton;
-import net.blay09.mods.cookingforblockheads.crafting.RecipeWithStatus;
 import net.blay09.mods.cookingforblockheads.menu.KitchenMenu;
 import net.blay09.mods.cookingforblockheads.menu.slot.CraftMatrixFakeSlot;
 import net.blay09.mods.cookingforblockheads.menu.slot.CraftableListingFakeSlot;
@@ -24,7 +23,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.FurnaceRecipeDisplay;
 import org.lwjgl.glfw.GLFW;
 
@@ -158,7 +156,7 @@ public class KitchenScreen extends AbstractContainerScreen<KitchenMenu> {
         if (mouseSlot instanceof CraftMatrixFakeSlot fakeSlot) {
             if (button == 0) {
                 ItemStack itemStack = mouseSlot.getItem();
-                RecipeWithStatus recipe = menu.findRecipeForResultItem(itemStack);
+                final var recipe = menu.findCraftableForResultItem(itemStack);
                 if (recipe != null) {
                     menu.selectCraftable(recipe);
                     setCurrentOffset(menu.getRecipesForSelectionIndex());
@@ -281,8 +279,8 @@ public class KitchenScreen extends AbstractContainerScreen<KitchenMenu> {
                         guiGraphics.blit(RenderType::guiTextured, guiTexture, slot.x, slot.y, 176, 76, 16, 16, 256, 256);
                     }
 
-                    final var recipe = fakeSlot.getCraftable();
-                    if (recipe != null && recipe.isMissingUtensils()) {
+                    final var craftable = fakeSlot.getCraftable();
+                    if (craftable != null && craftable.missingUtensils()) {
                         guiGraphics.blit(RenderType::guiTextured, guiTexture, slot.x, slot.y, 176, 92, 16, 16, 256, 256);
                     }
                 }

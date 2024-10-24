@@ -1,30 +1,21 @@
 package net.blay09.mods.cookingforblockheads.menu.slot;
 
-import net.blay09.mods.cookingforblockheads.crafting.RecipeWithStatus;
-import net.blay09.mods.cookingforblockheads.menu.KitchenMenu;
+import net.blay09.mods.cookingforblockheads.crafting.CraftableWithStatus;
 import net.minecraft.world.Container;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.jetbrains.annotations.Nullable;
 
 public class CraftableListingFakeSlot extends AbstractFakeSlot {
 
-    private final KitchenMenu menu;
-    private RecipeWithStatus craftable;
+    private CraftableWithStatus craftable;
 
-    public CraftableListingFakeSlot(KitchenMenu menu, Container container, int slotId, int x, int y) {
+    public CraftableListingFakeSlot(Container container, int slotId, int x, int y) {
         super(container, slotId, x, y);
-        this.menu = menu;
     }
 
     @Override
     public ItemStack getItem() {
-        if (craftable != null) {
-            final var contextMap = SlotDisplayContext.fromLevel(menu.player.level());
-            return craftable.recipeDisplayEntry().display().result().resolveForFirstStack(contextMap);
-        }
-        return ItemStack.EMPTY;
+        return craftable != null ? craftable.itemStack() : ItemStack.EMPTY;
     }
 
     @Override
@@ -37,12 +28,12 @@ public class CraftableListingFakeSlot extends AbstractFakeSlot {
         return craftable != null;
     }
 
-    public void setCraftable(@Nullable RecipeWithStatus craftable) {
+    public void setCraftable(@Nullable CraftableWithStatus craftable) {
         this.craftable = craftable;
     }
 
     @Nullable
-    public RecipeWithStatus getCraftable() {
+    public CraftableWithStatus getCraftable() {
         return craftable;
     }
 

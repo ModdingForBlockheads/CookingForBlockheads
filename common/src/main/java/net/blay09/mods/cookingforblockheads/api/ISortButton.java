@@ -1,6 +1,6 @@
 package net.blay09.mods.cookingforblockheads.api;
 
-import net.blay09.mods.cookingforblockheads.crafting.RecipeWithStatus;
+import net.blay09.mods.cookingforblockheads.crafting.CraftableWithStatus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ public interface ISortButton {
 
     Component getTooltip();
 
-    Comparator<RecipeWithStatus> getComparator(Player player);
+    Comparator<CraftableWithStatus> getComparator(Player player);
 
     int getIconTextureX();
 

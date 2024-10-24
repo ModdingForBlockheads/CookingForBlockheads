@@ -2,7 +2,7 @@ package net.blay09.mods.cookingforblockheads.client.gui;
 
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.api.ISortButton;
-import net.blay09.mods.cookingforblockheads.crafting.RecipeWithStatus;
+import net.blay09.mods.cookingforblockheads.crafting.CraftableWithStatus;
 import net.blay09.mods.cookingforblockheads.menu.comparator.ComparatorName;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,8 +25,8 @@ public class NameSortButton implements ISortButton {
     }
 
     @Override
-    public Comparator<RecipeWithStatus> getComparator(Player player) {
-        return new ComparatorName(player);
+    public Comparator<CraftableWithStatus> getComparator(Player player) {
+        return new ComparatorName();
     }
 
     @Override

@@ -1,26 +1,15 @@
 package net.blay09.mods.cookingforblockheads.menu.comparator;
 
-import net.blay09.mods.cookingforblockheads.crafting.RecipeWithStatus;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
+import net.blay09.mods.cookingforblockheads.crafting.CraftableWithStatus;
 
 import java.util.Comparator;
 
-public class ComparatorName implements Comparator<RecipeWithStatus> {
-
-    private final Player player;
-
-    public ComparatorName(Player player) {
-        this.player = player;
-    }
+public class ComparatorName implements Comparator<CraftableWithStatus> {
 
     @Override
-    public int compare(RecipeWithStatus o1, RecipeWithStatus o2) {
-        final var contextMap = SlotDisplayContext.fromLevel(player.level());
-        final var firstItem = o1.recipeDisplayEntry().display().result().resolveForFirstStack(contextMap);
-        final var secondItem = o2.recipeDisplayEntry().display().result().resolveForFirstStack(contextMap);
-        String s1 = firstItem.getDisplayName().getString();
-        String s2 = secondItem.getDisplayName().getString();
+    public int compare(CraftableWithStatus o1, CraftableWithStatus o2) {
+        String s1 = o1.itemStack().getDisplayName().getString();
+        String s2 = o2.itemStack().getDisplayName().getString();
         return s1.compareToIgnoreCase(s2);
     }
 
