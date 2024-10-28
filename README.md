@@ -4,15 +4,10 @@ Minecraft Mod. Adds a cooking book and multiblock kitchens that only shows recip
 
 - [Modpack Permissions](https://mods.twelveiterations.com/permissions)
 
-#### Forge
+#### Downloads
 
 [![Versions](http://cf.way2muchnoise.eu/versions/231484_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/cooking-for-blockheads)
 [![Downloads](http://cf.way2muchnoise.eu/full_231484_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/cooking-for-blockheads)
-
-#### Fabric
-
-[![Versions](http://cf.way2muchnoise.eu/versions/634546_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/cooking-for-blockheads-fabric)
-[![Downloads](http://cf.way2muchnoise.eu/full_634546_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/cooking-for-blockheads-fabric)
 
 ## Contributing
 
