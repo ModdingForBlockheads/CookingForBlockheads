@@ -35,7 +35,8 @@ public record CombinedKitchenItemProvider(List<KitchenItemProvider> providers) i
     public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
         if (cacheHint instanceof CacheHintWrapper wrapper) {
             final var provider = providers.get(wrapper.providerIndex);
-            final var token = provider.findIngredient(ingredient, ingredientTokens, wrapper.cacheHint);
+            final var filteredIngredientTokens = getFilteredIngredientTokens(ingredientTokens, wrapper.providerIndex);
+            final var token = provider.findIngredient(ingredient, filteredIngredientTokens, wrapper.cacheHint);
             if (token != null) {
                 return new IngredientTokenWrapper(wrapper.providerIndex, token);
             }
