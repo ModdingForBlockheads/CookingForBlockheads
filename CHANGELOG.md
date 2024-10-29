@@ -1,1 +1,1 @@
-- Fixed Tool Rack deleting item in hand if it's a block
+- Fixed Preservation Upgrade not actually preserving slots
