@@ -1,1 +1,2 @@
 - Fixed Preservation Upgrade not actually preserving slots
+- Fixed Milk Jar and Cow in a Jar not being considered fluid handlers on NeoForge
