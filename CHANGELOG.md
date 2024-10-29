@@ -1,1 +1,1 @@
-- Fixed toaster not toasting correctly
+- Fixed Preservation Upgrade not actually preserving slots
