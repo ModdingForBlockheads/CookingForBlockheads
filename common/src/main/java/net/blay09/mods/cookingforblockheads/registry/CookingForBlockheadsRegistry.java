@@ -42,23 +42,28 @@ public class CookingForBlockheadsRegistry {
 
     private static <C extends RecipeInput, T extends Recipe<C>> void loadRecipesByType(RecipeManager recipeManager, RegistryAccess registryAccess, RecipeType<T> recipeType) {
         final var recipeMap = ((RecipeManagerAccessor) recipeManager).getRecipes();
-        for (final var recipe : recipeMap.byType(recipeType)) {
-            if (!isEligibleRecipe(recipe)) {
+        for (final var recipeHolder : recipeMap.byType(recipeType)) {
+            if (!isEligibleRecipe(recipeHolder)) {
                 continue;
             }
 
-            final var recipeHandler = getKitchenRecipeHandler(recipe.value());
-            final var resultItem = recipeHandler.predictResultItem(recipe.value());
+            final var recipe = recipeHolder.value();
+            final var recipeHandler = getKitchenRecipeHandler(recipe);
+            if (recipeHandler == null) {
+                continue;
+            }
+
+            final var resultItem = recipeHandler.predictResultItem(recipe);
             if (isEligibleResultItem(resultItem)) {
                 final var itemId = Balm.getRegistries().getKey(resultItem.getItem());
-                recipesByItemId.put(itemId, recipe);
+                recipesByItemId.put(itemId, recipeHolder);
 
                 final var groups = getGroups();
                 for (final var group : groups) {
                     for (final var ingredient : group.getChildren()) {
                         if (ingredient.test(resultItem)) {
                             final var groupItemId = Balm.getRegistries().getKey(group.getParentItem());
-                            recipesByGroup.put(groupItemId, recipe);
+                            recipesByGroup.put(groupItemId, recipeHolder);
                             break;
                         }
                     }
