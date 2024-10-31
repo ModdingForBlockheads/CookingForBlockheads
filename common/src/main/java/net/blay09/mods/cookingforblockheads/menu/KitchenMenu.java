@@ -28,7 +28,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.display.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -243,23 +242,24 @@ public class KitchenMenu extends AbstractContainerMenu {
         for (ResourceLocation itemId : recipesByItemId.keySet()) {
             for (final var recipeHolder : recipesByItemId.get(itemId)) {
                 final var craftableWithStatus = craftableWithStatusFromRecipe(context, recipeHolder);
-                if (craftableWithStatus == null) continue;
-                result.compute(itemId, (k, v) -> CraftableWithStatus.best(v, craftableWithStatus));
+                if (craftableWithStatus != null) {
+                    result.compute(itemId, (k, v) -> CraftableWithStatus.best(v, craftableWithStatus));
+                }
             }
         }
         return result.values().stream().toList();
     }
 
-    private <C extends RecipeInput, T extends Recipe<C>> @Nullable CraftableWithStatus craftableWithStatusFromRecipe(CraftingContext context, RecipeHolder<T> recipeHolder) {
+    private <C extends RecipeInput, T extends Recipe<C>> @Nullable CraftableWithStatus craftableWithStatusFromRecipe(CraftingContext context, RecipeHolder<?> recipeHolder) {
         final var recipe = recipeHolder.value();
         final var recipeHandler = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe);
-        final var resultItem = recipeHandler.predictResultItem(recipe);
+        final var resultItem = recipeHandler.predictResultItem(recipeHolder);
         if (isGroupItem(resultItem)) {
             return null;
         }
 
         final var operation = context.createOperation(recipeHolder).prepare();
-        if (!kitchen.isRecipeAvailable(recipeHolder, operation)) {
+        if (!kitchen.isRecipeAvailable(operation)) {
             return null;
         }
 
@@ -304,19 +304,15 @@ public class KitchenMenu extends AbstractContainerMenu {
         final var context = new CraftingContext(kitchen, player);
         final var recipesForResult = getRecipesFor(resultItem);
         for (final var recipe : recipesForResult) {
-            extracted(recipe, context, recipeManager, result);
+            final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs).prepare();
+            recipeManager.listDisplaysForRecipe(recipe.id(), recipeDisplayEntry -> result.add(new RecipeWithStatus(recipeDisplayEntry,
+                    operation.getMissingIngredients(),
+                    operation.getMissingIngredientsMask(),
+                    operation.getLockedInputs())));
         }
 
         this.recipesForSelection = result;
         Balm.getNetworking().sendTo(player, new SelectionRecipesListMessage(result));
-    }
-
-    private <C extends RecipeInput, T extends Recipe<C>> void extracted(RecipeHolder<T> recipe, CraftingContext context, RecipeManager recipeManager, List<RecipeWithStatus> result) {
-        final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs).prepare();
-        recipeManager.listDisplaysForRecipe(recipe.id(), recipeDisplayEntry -> result.add(new RecipeWithStatus(recipeDisplayEntry,
-                operation.getMissingIngredients(),
-                operation.getMissingIngredientsMask(),
-                operation.getLockedInputs())));
     }
 
     public void craft(RecipeDisplayId recipeDisplayId, NonNullList<ItemStack> lockedInputs, boolean craftFullStack, boolean addToInventory) {
@@ -327,10 +323,7 @@ public class KitchenMenu extends AbstractContainerMenu {
             return;
         }
 
-        craftRecipe(recipeDisplayId, lockedInputs, craftFullStack, addToInventory, serverDisplayInfo.parent());
-    }
-
-    private <C extends RecipeInput, T extends Recipe<C>> void craftRecipe(RecipeDisplayId recipeDisplayId, NonNullList<ItemStack> lockedInputs, boolean craftFullStack, boolean addToInventory, RecipeHolder<T> recipe) {
+        final var recipe = serverDisplayInfo.parent();
         if (!kitchen.canProcess(recipe.value().getType())) {
             CookingForBlockheads.logger.error("Received invalid craft request, unprocessable recipe {}", recipeDisplayId);
             return;
@@ -339,7 +332,7 @@ public class KitchenMenu extends AbstractContainerMenu {
         final var context = new CraftingContext(kitchen, player);
         final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs);
         final var recipeHandler = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe.value());
-        final var resultItem = recipeHandler.predictResultItem(recipe.value());
+        final var resultItem = recipeHandler.predictResultItem(recipe);
         final var repeats = craftFullStack ? resultItem.getMaxStackSize() / resultItem.getCount() : 1;
         for (int i = 0; i < repeats; i++) {
             operation.prepare();

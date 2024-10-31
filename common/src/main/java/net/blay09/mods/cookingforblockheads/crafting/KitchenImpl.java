@@ -14,9 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -112,7 +109,7 @@ public class KitchenImpl implements Kitchen {
         return itemProcessorList.stream().anyMatch(it -> it.canProcess(recipeType));
     }
 
-    public <C extends RecipeInput, T extends Recipe<C>> boolean isRecipeAvailable(RecipeHolder<T> recipe, CraftingOperation<C, T> operation) {
+    public boolean isRecipeAvailable(CraftingOperation operation) {
         final var isNoFilter = activatingItemStack.is(ModItems.noFilterBook) || (activatingBlockEntity instanceof CookingTableBlockEntity cookingTable && cookingTable.hasNoFilterBook());
         if (isNoFilter) {
             return true;

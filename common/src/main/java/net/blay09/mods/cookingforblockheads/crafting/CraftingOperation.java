@@ -14,14 +14,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CraftingOperation<C extends RecipeInput, T extends Recipe<C>>  {
+public class CraftingOperation  {
 
     public record IngredientTokenKey(int providerIndex, List<Holder<Item>> items) {
         @Override
@@ -39,7 +37,7 @@ public class CraftingOperation<C extends RecipeInput, T extends Recipe<C>>  {
     }
 
     private final CraftingContext context;
-    private final T recipe;
+    private final RecipeHolder<?> recipe;
 
     private final Multimap<IngredientTokenKey, IngredientToken> tokensByIngredient = ArrayListMultimap.create();
     private final List<IngredientToken> ingredientTokens = new ArrayList<>();
@@ -48,23 +46,23 @@ public class CraftingOperation<C extends RecipeInput, T extends Recipe<C>>  {
     private NonNullList<ItemStack> lockedInputs;
     private int missingIngredientsMask;
 
-    public CraftingOperation(final CraftingContext context, RecipeHolder<T> recipe) {
+    public CraftingOperation(final CraftingContext context, RecipeHolder<?> recipe) {
         this.context = context;
-        this.recipe = recipe.value();
+        this.recipe = recipe;
     }
 
-    public CraftingOperation<C, T> withLockedInputs(@Nullable NonNullList<ItemStack> lockedInputs) {
+    public CraftingOperation withLockedInputs(@Nullable NonNullList<ItemStack> lockedInputs) {
         this.lockedInputs = lockedInputs;
         return this;
     }
 
-    public CraftingOperation<C, T> prepare() {
+    public CraftingOperation prepare() {
         tokensByIngredient.clear();
         ingredientTokens.clear();
         missingIngredients.clear();
         missingIngredientsMask = 0;
 
-        final var recipeMapper = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe);
+        final var recipeMapper = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe.value());
         final var ingredients = recipeMapper.getIngredients(recipe);
         for (int i = 0; i < ingredients.size(); i++) {
             if (ingredients.get(i).isEmpty()) {
@@ -148,8 +146,8 @@ public class CraftingOperation<C extends RecipeInput, T extends Recipe<C>>  {
         return craft(menu, registryAccess, recipe);
     }
 
-    private ItemStack craft(AbstractContainerMenu menu, RegistryAccess registryAccess, T recipe) {
-        final var recipeTypeHandler = CookingForBlockheadsRegistry.getKitchenRecipeHandler(recipe);
+    private ItemStack craft(AbstractContainerMenu menu, RegistryAccess registryAccess, RecipeHolder<?> recipe) {
+        final var recipeTypeHandler = CookingForBlockheadsRegistry.getKitchenRecipeHandler(recipe.value());
         if (recipeTypeHandler == null) {
             return ItemStack.EMPTY;
         }
