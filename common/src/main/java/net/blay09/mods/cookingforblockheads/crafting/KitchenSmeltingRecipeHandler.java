@@ -6,12 +6,13 @@ import net.blay09.mods.cookingforblockheads.mixin.SingleItemRecipeAccessor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
 import java.util.List;
 import java.util.Optional;
 
-public class KitchenSmeltingRecipeHandler implements KitchenRecipeHandler<SmeltingRecipe> {
+public class KitchenSmeltingRecipeHandler implements KitchenRecipeHandler<SingleRecipeInput, SmeltingRecipe> {
     @Override
     public int mapToMatrixSlot(SmeltingRecipe recipe, int ingredientIndex) {
         return 4;

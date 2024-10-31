@@ -22,11 +22,11 @@ import java.util.*;
 
 public class CookingForBlockheadsRegistry {
 
-    private static final Multimap<ResourceLocation, RecipeHolder<Recipe<?>>> recipesByItemId = ArrayListMultimap.create();
-    private static final Multimap<ResourceLocation, RecipeHolder<Recipe<?>>> recipesByGroup = ArrayListMultimap.create();
+    private static final Multimap<ResourceLocation, RecipeHolder<?>> recipesByItemId = ArrayListMultimap.create();
+    private static final Multimap<ResourceLocation, RecipeHolder<?>> recipesByGroup = ArrayListMultimap.create();
     private static final List<ISortButton> sortButtons = new ArrayList<>();
     private static final Map<ItemStack, Integer> ovenFuelItems = new HashMap<>();
-    private static final Map<Class<? extends Recipe<?>>, KitchenRecipeHandler<? extends Recipe<?>>> kitchenRecipeHandlers = new HashMap<>();
+    private static final Map<Class<? extends Recipe<?>>, KitchenRecipeHandler<?, ?>> kitchenRecipeHandlers = new HashMap<>();
 
     public static void initialize(BalmEvents events) {
         events.onEvent(ServerReloadFinishedEvent.class,
@@ -51,14 +51,14 @@ public class CookingForBlockheadsRegistry {
             final var resultItem = recipeHandler.predictResultItem(recipe.value());
             if (isEligibleResultItem(resultItem)) {
                 final var itemId = Balm.getRegistries().getKey(resultItem.getItem());
-                recipesByItemId.put(itemId, (RecipeHolder<Recipe<?>>) recipe);
+                recipesByItemId.put(itemId, recipe);
 
                 final var groups = getGroups();
                 for (final var group : groups) {
                     for (final var ingredient : group.getChildren()) {
                         if (ingredient.test(resultItem)) {
                             final var groupItemId = Balm.getRegistries().getKey(group.getParentItem());
-                            recipesByGroup.put(groupItemId, (RecipeHolder<Recipe<?>>) recipe);
+                            recipesByGroup.put(groupItemId, recipe);
                             break;
                         }
                     }
@@ -83,12 +83,12 @@ public class CookingForBlockheadsRegistry {
         return !CookingForBlockheadsConfig.getActive().excludedRecipes.contains(recipe.id().location());
     }
 
-    public static <C extends RecipeInput, T extends Recipe<C>> void registerKitchenRecipeHandler(Class<T> recipeType, KitchenRecipeHandler<T> handler) {
+    public static <C extends RecipeInput, T extends Recipe<C>> void registerKitchenRecipeHandler(Class<T> recipeType, KitchenRecipeHandler<C, T> handler) {
         kitchenRecipeHandlers.put(recipeType, handler);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Recipe<?>, V extends KitchenRecipeHandler<T>> V getKitchenRecipeHandler(T recipe) {
+    public static <C extends RecipeInput, T extends Recipe<C>, V extends KitchenRecipeHandler<C, T>> V getKitchenRecipeHandler(T recipe) {
         for (Class<? extends Recipe<?>> handlerClass : kitchenRecipeHandlers.keySet()) {
             if (handlerClass.isAssignableFrom(recipe.getClass())) {
                 return (V) kitchenRecipeHandlers.get(handlerClass);
@@ -119,17 +119,17 @@ public class CookingForBlockheadsRegistry {
         return 0;
     }
 
-    public static Collection<RecipeHolder<Recipe<?>>> getRecipesFor(ItemStack resultItem) {
+    public static Collection<RecipeHolder<?>> getRecipesFor(ItemStack resultItem) {
         final var itemId = Balm.getRegistries().getKey(resultItem.getItem());
         return recipesByItemId.get(itemId);
     }
 
-    public static Collection<? extends RecipeHolder<Recipe<?>>> getRecipesInGroup(ItemStack resultItem) {
+    public static Collection<? extends RecipeHolder<?>> getRecipesInGroup(ItemStack resultItem) {
         final var itemId = Balm.getRegistries().getKey(resultItem.getItem());
         return recipesByGroup.get(itemId);
     }
 
-    public static Multimap<ResourceLocation, RecipeHolder<Recipe<?>>> getRecipesByItemId() {
+    public static Multimap<ResourceLocation, RecipeHolder<?>> getRecipesByItemId() {
         return recipesByItemId;
     }
 }

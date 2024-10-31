@@ -4,11 +4,12 @@ import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenRecipeHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
 
-public abstract class AbstractKitchenCraftingRecipeHandler<T extends CraftingRecipe> implements KitchenRecipeHandler<T> {
+public abstract class AbstractKitchenCraftingRecipeHandler<T extends Recipe<CraftingInput>> implements KitchenRecipeHandler<CraftingInput, T> {
     @Override
     public ItemStack assemble(CraftingContext context, T recipe, List<IngredientToken> ingredientTokens, RegistryAccess registryAccess) {
         final var craftingContainer = new TransientHeadlessCraftingContainer(3, 3);

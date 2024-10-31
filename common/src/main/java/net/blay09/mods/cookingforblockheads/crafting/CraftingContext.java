@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -28,8 +29,8 @@ public class CraftingContext {
         itemProcessors = kitchen.getItemProcessors();
     }
 
-    public CraftingOperation createOperation(RecipeHolder<Recipe<?>> recipe) {
-        return new CraftingOperation(this, recipe);
+    public <C extends RecipeInput, T extends Recipe<C>> CraftingOperation<C, T> createOperation(RecipeHolder<T> recipe) {
+        return new CraftingOperation<>(this, recipe );
     }
 
     public List<KitchenItemProvider> getItemProviders() {

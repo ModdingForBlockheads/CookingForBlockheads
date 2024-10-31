@@ -3,6 +3,7 @@ package net.blay09.mods.cookingforblockheads.menu;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
+import net.blay09.mods.cookingforblockheads.api.CookingForBlockheadsAPI;
 import net.blay09.mods.cookingforblockheads.api.Kitchen;
 import net.blay09.mods.cookingforblockheads.crafting.CraftableWithStatus;
 import net.blay09.mods.cookingforblockheads.crafting.CraftingContext;
@@ -24,13 +25,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.display.RecipeDisplayEntry;
-import net.minecraft.world.item.crafting.display.RecipeDisplayId;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.display.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -79,7 +78,7 @@ public class KitchenMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                final var slot = new CraftMatrixFakeSlot(fakeInventory, j + i * 3, 24 + j * 18, 20 + i * 18);
+                final var slot = new CraftMatrixFakeSlot(this, fakeInventory, j + i * 3, 24 + j * 18, 20 + i * 18);
                 matrixSlots.add(slot);
                 addSlot(slot);
             }
@@ -242,25 +241,31 @@ public class KitchenMenu extends AbstractContainerMenu {
         final var context = new CraftingContext(kitchen, player);
         final var recipesByItemId = CookingForBlockheadsRegistry.getRecipesByItemId();
         for (ResourceLocation itemId : recipesByItemId.keySet()) {
-            for (final var recipe : recipesByItemId.get(itemId)) {
-                final var resultItem = recipe.value().getResultItem(player.level().registryAccess());
-                if (isGroupItem(resultItem)) {
-                    continue;
-                }
-
-                final var operation = context.createOperation(recipe).prepare();
-                if (!kitchen.isRecipeAvailable(recipe, operation)) {
-                    continue;
-                }
-
-                final var craftableWithStatus = new CraftableWithStatus(resultItem,
-                        operation.getMissingIngredients(),
-                        operation.getMissingIngredientsMask(),
-                        operation.getLockedInputs());
+            for (final var recipeHolder : recipesByItemId.get(itemId)) {
+                final var craftableWithStatus = craftableWithStatusFromRecipe(context, recipeHolder);
+                if (craftableWithStatus == null) continue;
                 result.compute(itemId, (k, v) -> CraftableWithStatus.best(v, craftableWithStatus));
             }
         }
         return result.values().stream().toList();
+    }
+
+    private <C extends RecipeInput, T extends Recipe<C>> @Nullable CraftableWithStatus craftableWithStatusFromRecipe(CraftingContext context, RecipeHolder<T> recipeHolder) {
+        final var recipe = recipeHolder.value();
+        final var recipeHandler = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe);
+        final var resultItem = recipeHandler.predictResultItem(recipe);
+        if (isGroupItem(resultItem)) {
+            return null;
+        }
+
+        final var operation = context.createOperation(recipeHolder).prepare();
+        if (!kitchen.isRecipeAvailable(recipeHolder, operation)) {
+            return null;
+        }
+
+        final var missingIngredients = operation.getMissingIngredients();
+        final var missingUtensils = operation.getMissingIngredients();
+        return new CraftableWithStatus(resultItem, !missingIngredients.isEmpty(), !missingUtensils.isEmpty());
     }
 
     private boolean isGroupItem(ItemStack resultItem) {
@@ -281,7 +286,7 @@ public class KitchenMenu extends AbstractContainerMenu {
         return false;
     }
 
-    private Collection<RecipeHolder<Recipe<?>>> getRecipesFor(ItemStack resultItem) {
+    private Collection<RecipeHolder<?>> getRecipesFor(ItemStack resultItem) {
         final var recipes = new ArrayList<>(CookingForBlockheadsRegistry.getRecipesFor(resultItem));
         recipes.addAll(CookingForBlockheadsRegistry.getRecipesInGroup(resultItem));
         return recipes;
@@ -299,42 +304,42 @@ public class KitchenMenu extends AbstractContainerMenu {
         final var context = new CraftingContext(kitchen, player);
         final var recipesForResult = getRecipesFor(resultItem);
         for (final var recipe : recipesForResult) {
-            final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs).prepare();
-            recipeManager.listDisplaysForRecipe(recipe.id(), recipeDisplayEntry -> result.add(new RecipeWithStatus(recipeDisplayEntry,
-                    operation.getMissingIngredients(),
-                    operation.getMissingIngredientsMask(),
-                    operation.getLockedInputs())));
+            extracted(recipe, context, recipeManager, result);
         }
 
         this.recipesForSelection = result;
         Balm.getNetworking().sendTo(player, new SelectionRecipesListMessage(result));
     }
 
+    private <C extends RecipeInput, T extends Recipe<C>> void extracted(RecipeHolder<T> recipe, CraftingContext context, RecipeManager recipeManager, List<RecipeWithStatus> result) {
+        final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs).prepare();
+        recipeManager.listDisplaysForRecipe(recipe.id(), recipeDisplayEntry -> result.add(new RecipeWithStatus(recipeDisplayEntry,
+                operation.getMissingIngredients(),
+                operation.getMissingIngredientsMask(),
+                operation.getLockedInputs())));
+    }
+
     public void craft(RecipeDisplayId recipeDisplayId, NonNullList<ItemStack> lockedInputs, boolean craftFullStack, boolean addToInventory) {
         final var level = player.level();
-        final var recipe = (RecipeHolder<Recipe<?>>) level.getServer().getRecipeManager().getRecipeFromDisplay(recipeDisplayId).parent();
-        if (recipe == null) {
+        final var serverDisplayInfo = level.getServer().getRecipeManager().getRecipeFromDisplay(recipeDisplayId);
+        if (serverDisplayInfo == null) {
             CookingForBlockheads.logger.error("Received invalid recipe from client: {}", recipeDisplayId);
             return;
         }
 
+        craftRecipe(recipeDisplayId, lockedInputs, craftFullStack, addToInventory, serverDisplayInfo.parent());
+    }
+
+    private <C extends RecipeInput, T extends Recipe<C>> void craftRecipe(RecipeDisplayId recipeDisplayId, NonNullList<ItemStack> lockedInputs, boolean craftFullStack, boolean addToInventory, RecipeHolder<T> recipe) {
         if (!kitchen.canProcess(recipe.value().getType())) {
             CookingForBlockheads.logger.error("Received invalid craft request, unprocessable recipe {}", recipeDisplayId);
             return;
         }
 
-        var craftable = this.craftables.stream().filter(it -> it.recipe(player) == recipe).findAny().orElse(null);
-        if (craftable == null) {
-            craftable = this.recipesForSelection.stream().filter(it -> it.recipe(player) == recipe).findAny().orElse(null);
-            if (craftable == null) {
-                CookingForBlockheads.logger.error("Received invalid craft request, unknown recipe {}", recipeDisplayId);
-                return;
-            }
-        }
-
         final var context = new CraftingContext(kitchen, player);
         final var operation = context.createOperation(recipe).withLockedInputs(lockedInputs);
-        final var resultItem = recipe.value().getResultItem(level.registryAccess());
+        final var recipeHandler = CookingForBlockheadsAPI.getKitchenRecipeHandler(recipe.value());
+        final var resultItem = recipeHandler.predictResultItem(recipe.value());
         final var repeats = craftFullStack ? resultItem.getMaxStackSize() / resultItem.getCount() : 1;
         for (int i = 0; i < repeats; i++) {
             operation.prepare();
@@ -424,36 +429,59 @@ public class KitchenMenu extends AbstractContainerMenu {
     private void updateMatrixSlots() {
         final var selectedRecipe = getSelectedRecipe();
         if (selectedRecipe != null) {
-            final var recipe = selectedRecipe.recipe(player);
-            updateMatrixSlots(recipe.value(), selectedRecipe);
+            updateMatrixSlots(selectedRecipe);
         } else {
             for (int i = 0; i < matrixSlots.size(); i++) {
                 CraftMatrixFakeSlot matrixSlot = matrixSlots.get(i);
-                matrixSlot.setIngredient(i, Ingredient.EMPTY, ItemStack.EMPTY);
+                matrixSlot.setIngredient(i, null, ItemStack.EMPTY);
                 matrixSlot.setMissing(true);
             }
         }
     }
 
-    private <C extends RecipeInput, T extends Recipe<C>> void updateMatrixSlots(T recipe, RecipeWithStatus status) {
-        final var ingredients = recipe.getIngredients();
-        final var matrix = NonNullList.withSize(9, Ingredient.EMPTY);
+    private void updateMatrixSlots(RecipeWithStatus recipe) {
+        final var recipeDisplay = recipe.recipeDisplayEntry().display();
+        final var matrix = NonNullList.<SlotDisplay>withSize(9, SlotDisplay.Empty.INSTANCE);
         final var missingMatrix = new boolean[9];
         final var ingredientIndexMatrix = new int[9];
-        final var recipeTypeHandler = CookingForBlockheadsRegistry.getKitchenRecipeHandler(recipe);
-        if (recipeTypeHandler != null) {
-            for (int i = 0; i < ingredients.size(); i++) {
-                final var ingredient = ingredients.get(i);
-                final var matrixSlot = recipeTypeHandler.mapToMatrixSlot(recipe, i);
+        switch (recipeDisplay) {
+            case ShapedCraftingRecipeDisplay shapedCraftingRecipeDisplay -> {
+                final var ingredients = shapedCraftingRecipeDisplay.ingredients();
+                for (int i = 0; i < ingredients.size(); i++) {
+                    final var ingredient = ingredients.get(i);
+                    final int recipeWidth = shapedCraftingRecipeDisplay.width();
+                    final int origX = i % recipeWidth;
+                    final int origY = i / recipeWidth;
+                    final int offsetX = recipeWidth == 1 ? 1 : 0;
+                    int matrixSlot = origY * 3 + origX + offsetX;
+                    matrix.set(matrixSlot, ingredient);
+                    missingMatrix[matrixSlot] = (recipe.missingIngredientsMask() & (1 << i)) == (1 << i);
+                    ingredientIndexMatrix[matrixSlot] = i;
+                }
+            }
+            case ShapelessCraftingRecipeDisplay shapelessCraftingRecipeDisplay -> {
+                final var ingredients = shapelessCraftingRecipeDisplay.ingredients();
+                for (int i = 0; i < ingredients.size(); i++) {
+                    final var ingredient = ingredients.get(i);
+                    matrix.set(i, ingredient);
+                    missingMatrix[i] = (recipe.missingIngredientsMask() & (1 << i)) == (1 << i);
+                    ingredientIndexMatrix[i] = i;
+                }
+            }
+            case FurnaceRecipeDisplay furnaceRecipeDisplay -> {
+                final var ingredient = furnaceRecipeDisplay.ingredient();
+                final var matrixSlot = 4;
                 matrix.set(matrixSlot, ingredient);
-                missingMatrix[matrixSlot] = (status.missingIngredientsMask() & (1 << i)) == (1 << i);
-                ingredientIndexMatrix[matrixSlot] = i;
+                missingMatrix[matrixSlot] = (recipe.missingIngredientsMask() & (1)) == (1);
+                ingredientIndexMatrix[matrixSlot] = 0;
+            }
+            default -> {
             }
         }
 
         for (int i = 0; i < matrixSlots.size(); i++) {
             final var matrixSlot = matrixSlots.get(i);
-            final var lockedInputs = status.lockedInputs();
+            final var lockedInputs = recipe.lockedInputs();
             final int ingredientIndex = ingredientIndexMatrix[i];
             final var lockedInput = lockedInputs.get(ingredientIndex);
             matrixSlot.setIngredient(ingredientIndex, matrix.get(i), lockedInput);
@@ -519,10 +547,6 @@ public class KitchenMenu extends AbstractContainerMenu {
     }
 
     public boolean isSelectedSlot(CraftableListingFakeSlot slot) {
-        final var selectedRecipe = getSelectedRecipe();
-        if (selectedRecipe != null) {
-            // TODO
-        }
         return selectedCraftable != null
                 && slot.getCraftable() != null
                 && ItemStack.isSameItemSameComponents(slot.getCraftable().itemStack(), selectedCraftable.itemStack());
@@ -537,7 +561,7 @@ public class KitchenMenu extends AbstractContainerMenu {
     }
 
     public void setRecipesForSelection(List<RecipeWithStatus> recipes) {
-        recipesForSelection = recipes.size() > 0 ? recipes : null;
+        recipesForSelection = !recipes.isEmpty() ? recipes : null;
         recipesForSelectionIndex = recipesForSelection != null ? Math.max(0, Math.min(recipesForSelection.size() - 1, recipesForSelectionIndex)) : 0;
 
         updateMatrixSlots();

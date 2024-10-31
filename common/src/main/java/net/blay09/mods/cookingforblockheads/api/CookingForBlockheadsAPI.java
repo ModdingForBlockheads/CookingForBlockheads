@@ -41,11 +41,11 @@ public class CookingForBlockheadsAPI {
         return internalMethods.createKitchen(itemStack);
     }
 
-    public static <C extends RecipeInput, T extends Recipe<C>> void registerKitchenRecipeHandler(Class<T> recipeClass, KitchenRecipeHandler<T> kitchenRecipeHandler) {
+    public static <C extends RecipeInput, T extends Recipe<C>> void registerKitchenRecipeHandler(Class<T> recipeClass, KitchenRecipeHandler<C, T> kitchenRecipeHandler) {
         internalMethods.registerKitchenRecipeHandler(recipeClass, kitchenRecipeHandler);
     }
 
-    public static <C extends RecipeInput, T extends Recipe<C>> KitchenRecipeHandler<T> getKitchenRecipeHandler(T recipe) {
+    public static <C extends RecipeInput, T extends Recipe<C>> KitchenRecipeHandler<C, T> getKitchenRecipeHandler(T recipe) {
         return internalMethods.getKitchenRecipeHandler(recipe);
     }
 

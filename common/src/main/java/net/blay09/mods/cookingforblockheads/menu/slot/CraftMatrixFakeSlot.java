@@ -1,10 +1,13 @@
 package net.blay09.mods.cookingforblockheads.menu.slot;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.cookingforblockheads.menu.KitchenMenu;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 
 import java.util.Comparator;
 
@@ -13,38 +16,40 @@ public class CraftMatrixFakeSlot extends AbstractFakeSlot {
     private static final float ITEM_SWITCH_TIME = 40f;
 
     private final NonNullList<ItemStack> visibleStacks = NonNullList.create();
+    private final KitchenMenu menu;
 
     private int ingredientIndex;
-    private Ingredient ingredient;
+    private SlotDisplay slotDisplay;
     private float variantTimePassed;
     private int currentVariantIndex;
     private boolean isLocked;
     private boolean missing = true;
 
-    public CraftMatrixFakeSlot(Container container, int slotId, int x, int y) {
+    public CraftMatrixFakeSlot(KitchenMenu menu, Container container, int slotId, int x, int y) {
         super(container, slotId, x, y);
+        this.menu = menu;
     }
 
-    public void setIngredient(final int ingredientIndex, final Ingredient ingredient, final ItemStack lockedInput) {
+    public void setIngredient(final int ingredientIndex, final SlotDisplay slotDisplay, final ItemStack lockedInput) {
         this.ingredientIndex = ingredientIndex;
 
-        final var previousIngredient = this.ingredient;
+        final var previousIngredient = this.slotDisplay;
         var effectiveLockedInput = isLocked ? getItem() : ItemStack.EMPTY;
         if (!lockedInput.isEmpty()) {
             effectiveLockedInput = lockedInput;
         }
         visibleStacks.clear();
-        this.ingredient = ingredient;
-        for (final var itemStack : ingredient.items()) { // TODO probably need to resolve the display here
-            // TODO if (!itemStack.isEmpty()) {
-            // TODO     itemStack.setCount(1);
-            // TODO     visibleStacks.add(itemStack);
-            // TODO }
+        this.slotDisplay = slotDisplay;
+        final var itemStacks = slotDisplay.resolveForStacks(SlotDisplayContext.fromLevel(menu.player.level()));
+        for (final var itemStack : itemStacks) {
+            if (!itemStack.isEmpty()) {
+                visibleStacks.add(itemStack.copyWithCount(1));
+            }
         }
         visibleStacks.sort(Comparator.comparing(it -> Balm.getRegistries().getKey(it.getItem()).toString()));
 
         variantTimePassed = 0;
-        if (previousIngredient != ingredient) {
+        if (previousIngredient != slotDisplay) {
             currentVariantIndex = 0;
         } else {
             currentVariantIndex = !visibleStacks.isEmpty() ? currentVariantIndex % visibleStacks.size() : 0;
