@@ -42,7 +42,8 @@ import java.util.List;
 
 public class FridgeBlock extends BaseKitchenBlock {
 
-    public static final MapCodec<FridgeBlock> CODEC = RecordCodecBuilder.mapCodec((it) -> it.group(DyeColor.CODEC.fieldOf("color").forGetter(FridgeBlock::getColor),
+    public static final MapCodec<FridgeBlock> CODEC = RecordCodecBuilder.mapCodec((it) -> it.group(DyeColor.CODEC.fieldOf("color")
+                    .forGetter(FridgeBlock::getColor),
             propertiesCodec()).apply(it, FridgeBlock::new));
 
     public enum FridgeModelType implements StringRepresentable {
@@ -164,21 +165,30 @@ public class FridgeBlock extends BaseKitchenBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
+        var state = super.getStateForPlacement(context);
+        final var level = context.getLevel();
+        final var pos = context.getClickedPos();//.relative(context.getClickedFace());
+        final var posBelow = pos.below();
+        final var stateBelow = level.getBlockState(posBelow);
+        final var posAbove = pos.above();
+        final var stateAbove = level.getBlockState(posAbove);
+        if (stateBelow.getBlock() == this && stateBelow.getValue(MODEL_TYPE) == FridgeModelType.SMALL) {
+            state = state.setValue(MODEL_TYPE, FridgeModelType.LARGE_UPPER);
+        } else if (stateAbove.getBlock() == this && stateAbove.getValue(MODEL_TYPE) == FridgeModelType.SMALL) {
+            state = state.setValue(MODEL_TYPE, FridgeModelType.LARGE_LOWER);
+        }
         return state.setValue(FLIPPED, shouldBePlacedFlipped(context, state.getValue(FACING)));
     }
 
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource randomSource) {
-        BlockPos posBelow = pos.below();
-        BlockState stateBelow = level.getBlockState(posBelow);
-        BlockPos posAbove = pos.above();
-        BlockState stateAbove = level.getBlockState(posAbove);
-        if (stateBelow.getBlock() == this && stateBelow.getValue(MODEL_TYPE) == FridgeModelType.SMALL) {
-            // TODO can't set anymore from updateShape level.setBlock(posBelow, stateBelow.setValue(MODEL_TYPE, FridgeModelType.LARGE_LOWER).setValue(FACING, state.getValue(FACING)), 3);
+        final var posBelow = pos.below();
+        final var stateBelow = level.getBlockState(posBelow);
+        final var posAbove = pos.above();
+        final var stateAbove = level.getBlockState(posAbove);
+        if (stateBelow.getBlock() == this && stateBelow.getValue(MODEL_TYPE) == FridgeModelType.LARGE_LOWER) {
             return state.setValue(MODEL_TYPE, FridgeModelType.LARGE_UPPER);
-        } else if (stateAbove.getBlock() == this && stateAbove.getValue(MODEL_TYPE) == FridgeModelType.SMALL) {
-            // TODO can't set anymore from updateShape level.setBlock(posAbove, stateAbove.setValue(MODEL_TYPE, FridgeModelType.LARGE_UPPER).setValue(FACING, state.getValue(FACING)), 3);
+        } else if (stateAbove.getBlock() == this && stateAbove.getValue(MODEL_TYPE) == FridgeModelType.LARGE_UPPER) {
             return state.setValue(MODEL_TYPE, FridgeModelType.LARGE_LOWER);
         }
 
