@@ -239,7 +239,7 @@ public class KitchenMenu extends AbstractContainerMenu {
         final var result = new HashMap<ResourceLocation, CraftableWithStatus>();
         final var context = new CraftingContext(kitchen, player);
         final var recipesByItemId = CookingForBlockheadsRegistry.getRecipesByItemId();
-        for (ResourceLocation itemId : recipesByItemId.keySet()) {
+        for (final var itemId : recipesByItemId.keySet()) {
             for (final var recipeHolder : recipesByItemId.get(itemId)) {
                 final var craftableWithStatus = craftableWithStatusFromRecipe(context, recipeHolder);
                 if (craftableWithStatus != null) {
