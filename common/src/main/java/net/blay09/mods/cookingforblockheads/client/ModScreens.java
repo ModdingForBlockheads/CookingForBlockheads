@@ -15,5 +15,6 @@ public class ModScreens {
         screens.registerScreen(ModMenus.recipeBook::get, KitchenScreen::new);
         screens.registerScreen(ModMenus.craftingBook::get, KitchenScreen::new);
         screens.registerScreen(ModMenus.cookingTable::get, KitchenScreen::new);
+        screens.registerScreen(ModMenus.cuttingBoard::get, CuttingBoardScreen::new);
     }
 }

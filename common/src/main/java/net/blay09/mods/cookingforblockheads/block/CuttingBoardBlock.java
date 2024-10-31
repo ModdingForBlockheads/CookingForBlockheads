@@ -1,6 +1,7 @@
 package net.blay09.mods.cookingforblockheads.block;
 
 import com.mojang.serialization.MapCodec;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.cookingforblockheads.block.entity.CuttingBoardBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.CuttingBoardMenu;
@@ -68,7 +69,7 @@ public class CuttingBoardBlock extends BaseKitchenBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            player.openMenu(state.getMenuProvider(level, pos));
+            Balm.getNetworking().openGui(player, state.getMenuProvider(level, pos));
             player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
             return InteractionResult.CONSUME;
         }
