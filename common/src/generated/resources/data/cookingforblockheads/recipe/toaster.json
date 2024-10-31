@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:stone_button"
-    },
-    "D": {
-      "item": "minecraft:iron_trapdoor"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "L": {
-      "item": "minecraft:lava_bucket"
-    }
+    "B": "minecraft:stone_button",
+    "D": "minecraft:iron_trapdoor",
+    "I": "#c:ingots/iron",
+    "L": "minecraft:lava_bucket"
   },
   "pattern": [
     "  B",

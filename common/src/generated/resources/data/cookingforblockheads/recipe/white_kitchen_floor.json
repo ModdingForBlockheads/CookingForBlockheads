@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:coal_block"
-    },
-    "W": {
-      "item": "minecraft:quartz_block"
-    }
+    "B": "minecraft:coal_block",
+    "W": "minecraft:quartz_block"
   },
   "pattern": [
     "BW",

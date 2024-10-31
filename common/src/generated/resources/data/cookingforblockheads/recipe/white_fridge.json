@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:chests/wooden"
-    },
-    {
-      "item": "minecraft:iron_door"
-    }
+    "#c:chests/wooden",
+    "minecraft:iron_door"
   ],
   "result": {
     "count": 1,

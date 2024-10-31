@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:ovens"
-    },
-    {
-      "tag": "c:dyes/gray"
-    }
+    "#cookingforblockheads:ovens",
+    "#c:dyes/gray"
   ],
   "result": {
     "count": 1,

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:counters"
-    },
-    {
-      "tag": "c:dyes/lime"
-    }
+    "#cookingforblockheads:counters",
+    "#c:dyes/lime"
   ],
   "result": {
     "count": 1,

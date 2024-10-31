@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
     "SS"

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "S": {
-      "item": "minecraft:snowball"
-    }
+    "C": "minecraft:comparator",
+    "I": "#c:ingots/iron",
+    "S": "minecraft:snowball"
   },
   "pattern": [
     "SSS",

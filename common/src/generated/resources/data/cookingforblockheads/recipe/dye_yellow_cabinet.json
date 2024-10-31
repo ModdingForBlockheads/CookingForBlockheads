@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:cabinets"
-    },
-    {
-      "tag": "c:dyes/yellow"
-    }
+    "#cookingforblockheads:cabinets",
+    "#c:dyes/yellow"
   ],
   "result": {
     "count": 1,

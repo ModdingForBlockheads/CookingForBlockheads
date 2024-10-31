@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:connectors"
-    },
-    {
-      "tag": "c:dyes/light_gray"
-    }
+    "#cookingforblockheads:connectors",
+    "#c:dyes/light_gray"
   ],
   "result": {
     "count": 1,

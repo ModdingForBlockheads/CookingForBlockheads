@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "cookingforblockheads:crafting_book"
-    },
-    "C": {
-      "item": "minecraft:terracotta"
-    },
-    "S": {
-      "tag": "c:stones"
-    }
+    "B": "cookingforblockheads:crafting_book",
+    "C": "minecraft:terracotta",
+    "S": "#c:stones"
   },
   "pattern": [
     "SSS",

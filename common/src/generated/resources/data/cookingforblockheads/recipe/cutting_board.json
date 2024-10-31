@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "minecraft:iron_axe"
-    },
-    "S": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "A": "minecraft:iron_axe",
+    "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
     "A",

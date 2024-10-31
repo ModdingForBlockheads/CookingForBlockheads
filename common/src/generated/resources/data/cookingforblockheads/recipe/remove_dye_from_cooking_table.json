@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:dyed_cooking_tables"
-    },
-    {
-      "item": "minecraft:bone_meal"
-    }
+    "#cookingforblockheads:dyed_cooking_tables",
+    "minecraft:bone_meal"
   ],
   "result": {
     "count": 1,

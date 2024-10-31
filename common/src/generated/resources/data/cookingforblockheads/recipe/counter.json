@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:chests/wooden"
-    },
-    "C": {
-      "item": "minecraft:terracotta"
-    },
-    "S": {
-      "tag": "c:stones"
-    }
+    "B": "#c:chests/wooden",
+    "C": "minecraft:terracotta",
+    "S": "#c:stones"
   },
   "pattern": [
     "SSS",

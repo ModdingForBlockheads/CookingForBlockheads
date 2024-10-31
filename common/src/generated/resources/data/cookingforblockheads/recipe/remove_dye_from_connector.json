@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:dyed_connectors"
-    },
-    {
-      "item": "minecraft:bone_meal"
-    }
+    "#cookingforblockheads:dyed_connectors",
+    "minecraft:bone_meal"
   ],
   "result": {
     "count": 1,

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:fridges"
-    },
-    {
-      "tag": "c:dyes/light_gray"
-    }
+    "#cookingforblockheads:fridges",
+    "#c:dyes/light_gray"
   ],
   "result": {
     "count": 1,

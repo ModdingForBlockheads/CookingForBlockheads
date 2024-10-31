@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:white_concrete"
-    },
-    "W": {
-      "item": "minecraft:black_concrete"
-    }
+    "B": "minecraft:white_concrete",
+    "W": "minecraft:black_concrete"
   },
   "pattern": [
     "BW",

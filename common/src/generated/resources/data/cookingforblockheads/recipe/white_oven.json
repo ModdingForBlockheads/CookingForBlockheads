@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "item": "minecraft:furnace"
-    },
-    "G": {
-      "item": "minecraft:black_stained_glass"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "F": "minecraft:furnace",
+    "G": "minecraft:black_stained_glass",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "GGG",

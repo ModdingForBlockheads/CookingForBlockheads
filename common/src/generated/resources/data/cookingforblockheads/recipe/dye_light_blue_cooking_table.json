@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:cooking_tables"
-    },
-    {
-      "tag": "c:dyes/light_blue"
-    }
+    "#cookingforblockheads:cooking_tables",
+    "#c:dyes/light_blue"
   ],
   "result": {
     "count": 1,

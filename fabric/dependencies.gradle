@@ -4,7 +4,7 @@ dependencies {
     }
     compileOnly "mezz.jei:jei-$jei_minecraft_version-common-api:$jei_version"
     modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
-    modImplementation "curse.maven:jade-324717:$jade_fabric_version"
+    modCompileOnly "curse.maven:jade-324717:$jade_fabric_version"
     modCompileOnly "mcp.mobius.waila:wthit-api:mojmap-$wthit_version"
     // modCompileOnly "curse.maven:epherolib-885449:4950007"
     // modCompileOnly "curse.maven:croptopia-415438:4950008"

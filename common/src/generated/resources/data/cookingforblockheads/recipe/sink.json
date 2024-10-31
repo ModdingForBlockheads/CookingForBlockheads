@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:water_bucket"
-    },
-    "C": {
-      "item": "minecraft:terracotta"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "B": "minecraft:water_bucket",
+    "C": "minecraft:terracotta",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "III",

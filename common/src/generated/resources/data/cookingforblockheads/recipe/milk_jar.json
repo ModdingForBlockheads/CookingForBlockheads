@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "minecraft:glass"
-    },
-    "M": {
-      "item": "minecraft:milk_bucket"
-    },
-    "P": {
-      "tag": "minecraft:planks"
-    }
+    "G": "minecraft:glass",
+    "M": "minecraft:milk_bucket",
+    "P": "#minecraft:planks"
   },
   "pattern": [
     "GPG",

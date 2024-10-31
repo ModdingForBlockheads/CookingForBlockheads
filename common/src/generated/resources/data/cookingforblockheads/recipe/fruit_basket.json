@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": {
-      "tag": "minecraft:wooden_pressure_plates"
-    },
-    "S": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "P": "#minecraft:wooden_pressure_plates",
+    "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
     "SPS"

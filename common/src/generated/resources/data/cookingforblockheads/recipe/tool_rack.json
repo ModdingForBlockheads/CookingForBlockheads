@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:nuggets/iron"
-    },
-    "S": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "I": "#c:nuggets/iron",
+    "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
     "SSS",

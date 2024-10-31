@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "cookingforblockheads:recipe_book"
-    },
-    "C": {
-      "item": "minecraft:crafting_table"
-    },
-    "D": {
-      "tag": "c:gems/diamond"
-    }
+    "B": "cookingforblockheads:recipe_book",
+    "C": "minecraft:crafting_table",
+    "D": "#c:gems/diamond"
   },
   "pattern": [
     " D ",

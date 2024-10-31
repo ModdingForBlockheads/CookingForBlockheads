@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "cookingforblockheads:sinks"
-    },
-    {
-      "tag": "c:dyes/magenta"
-    }
+    "#cookingforblockheads:sinks",
+    "#c:dyes/magenta"
   ],
   "result": {
     "count": 1,

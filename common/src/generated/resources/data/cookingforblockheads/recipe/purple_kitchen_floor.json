@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/purple"
-    },
-    "F": {
-      "item": "cookingforblockheads:white_kitchen_floor"
-    }
+    "D": "#c:dyes/purple",
+    "F": "cookingforblockheads:white_kitchen_floor"
   },
   "pattern": [
     "FFF",
