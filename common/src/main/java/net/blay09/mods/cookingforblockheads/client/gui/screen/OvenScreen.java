@@ -44,16 +44,16 @@ public class OvenScreen extends AbstractContainerScreen<OvenMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.renderLabels(guiGraphics, mouseX, mouseY);
 
-        OvenBlockEntity tileEntity = menu.getOven();
+        final var oven = menu.getOven();
         for (int i = 0; i < 9; i++) {
             Slot slot = menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = oven.getSmeltingResult(slot.getItem());
                 if (!itemStack.isEmpty()) {
                     final var pose = guiGraphics.pose();
                     pose.pushPose();
                     pose.translate(0f, 0f, 200f);
-                    RenderSystem.setShaderColor(1f, 1f, 1f, tileEntity.getCookProgress(i));
+                    RenderSystem.setShaderColor(1f, 1f, 1f, oven.getCookProgress(i));
                     guiGraphics.renderItem(itemStack, slot.x, slot.y);
                     RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
                     pose.popPose();
