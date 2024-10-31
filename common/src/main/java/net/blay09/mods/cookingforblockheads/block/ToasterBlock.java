@@ -56,6 +56,20 @@ public class ToasterBlock extends BaseKitchenBlock {
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        final var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ToasterBlockEntity toaster) {
+            if (!toaster.getContainer().getItem(0).isEmpty() && !toaster.getContainer().getItem(1).isEmpty()) {
+                if (!toaster.isActive() && (!toaster.getContainer().getItem(0).isEmpty() || !toaster.getContainer().getItem(1).isEmpty())) {
+                    toaster.setActive(!toaster.isActive());
+                    return InteractionResult.SUCCESS;
+                }
+            }
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (itemStack.isEmpty()) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -63,12 +77,12 @@ public class ToasterBlock extends BaseKitchenBlock {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ToasterBlockEntity toaster) {
-            ItemStack heldItem = player.getItemInHand(hand);
-            if (heldItem.isEmpty() || !toaster.getContainer().getItem(0).isEmpty() && !toaster.getContainer().getItem(1).isEmpty()) {
+            if (!toaster.getContainer().getItem(0).isEmpty() && !toaster.getContainer().getItem(1).isEmpty()) {
                 if (!toaster.isActive() && (!toaster.getContainer().getItem(0).isEmpty() || !toaster.getContainer().getItem(1).isEmpty())) {
                     toaster.setActive(!toaster.isActive());
                 }
             } else {
+                final var heldItem = player.getItemInHand(hand);
                 if (toaster.canToast(heldItem)) {
                     for (int i = 0; i < toaster.getContainer().getContainerSize(); i++) {
                         if (toaster.getContainer().getItem(i).isEmpty()) {
