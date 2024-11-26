@@ -12,6 +12,8 @@ import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -49,12 +51,16 @@ public class MilkJarBlockEntity extends BalmBlockEntity implements BalmFluidTank
     private record MilkJarItemProvider(MilkJarBlockEntity milkJar) implements KitchenItemProvider {
         @Override
         public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-            for (final var item : ingredient.items()) {
-                final var found = findIngredient(new ItemStack(item), ingredientTokens, cacheHint);
-                if (found != null) {
-                    return found;
+            for (final var milkItem : BuiltInRegistries.ITEM.getTagOrEmpty(ModItemTags.MILK))
+                if (ingredient.acceptsItem(milkItem)) {
+                    final var milkUnitsUsed = ingredientTokens.size();
+                    final var milkUnitsAvailable = milkJar.getFluidTank().getAmount() / 1000 - milkUnitsUsed;
+                    if (milkUnitsAvailable > 1) {
+                        return new MilkJarIngredientToken(milkJar, new ItemStack(milkItem));
+                    } else {
+                        return null;
+                    }
                 }
-            }
 
             return null;
         }

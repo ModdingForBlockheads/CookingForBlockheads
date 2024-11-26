@@ -2,6 +2,7 @@ package net.blay09.mods.cookingforblockheads.crafting;
 
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -72,8 +73,8 @@ public record RecipeWithStatus(RecipeDisplayEntry recipeDisplayEntry, List<Ingre
     }
 
     private static boolean isUtensil(Ingredient ingredient) {
-        for (final var itemStack : ingredient.items()) {
-            if (itemStack.is(ModItemTags.UTENSILS)) {
+        for (final var utensilItem : BuiltInRegistries.ITEM.getTagOrEmpty(ModItemTags.UTENSILS)) {
+            if (ingredient.acceptsItem(utensilItem)) {
                 return true;
             }
         }

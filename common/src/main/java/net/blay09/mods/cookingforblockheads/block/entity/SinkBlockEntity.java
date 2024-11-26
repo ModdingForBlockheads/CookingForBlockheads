@@ -14,8 +14,10 @@ import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -53,12 +55,16 @@ public class SinkBlockEntity extends BalmBlockEntity implements BalmFluidTankPro
     private record SinkItemProvider(SinkBlockEntity sink) implements KitchenItemProvider {
         @Override
         public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-            for (final var item : ingredient.items()) {
-                final var found = findIngredient(new ItemStack(item), ingredientTokens, cacheHint);
-                if (found != null) {
-                    return found;
+            for (final var waterItem : BuiltInRegistries.ITEM.getTagOrEmpty(ModItemTags.WATER))
+                if (ingredient.acceptsItem(waterItem)) {
+                    final var waterUnitsUsed = ingredientTokens.size();
+                    final var waterUnitsAvailable = sink.getFluidTank().getAmount() / 1000 - waterUnitsUsed;
+                    if (waterUnitsAvailable > 1) {
+                        return new SinkIngredientToken(sink, new ItemStack(waterItem));
+                    } else {
+                        return null;
+                    }
                 }
-            }
 
             return null;
         }
@@ -69,9 +75,9 @@ public class SinkBlockEntity extends BalmBlockEntity implements BalmFluidTankPro
                 return null;
             }
 
-            final var milkUnitsUsed = ingredientTokens.size();
-            final var milkUnitsAvailable = sink.getFluidTank().getAmount() / 1000 - milkUnitsUsed;
-            if (milkUnitsAvailable > 1) {
+            final var waterUnitsUsed = ingredientTokens.size();
+            final var waterUnitsAvailable = sink.getFluidTank().getAmount() / 1000 - waterUnitsUsed;
+            if (waterUnitsAvailable > 1) {
                 return new SinkIngredientToken(sink, itemStack);
             } else {
                 return null;
@@ -119,8 +125,7 @@ public class SinkBlockEntity extends BalmBlockEntity implements BalmFluidTankPro
                 return maxDrain;
             }
 
-            if (fluid.isSame(Fluids.EMPTY) || !fluid.isSame(fluid))
-            {
+            if (fluid.isSame(Fluids.EMPTY) || !fluid.isSame(fluid)) {
                 return 0;
             }
 

@@ -16,7 +16,8 @@ import net.minecraft.world.entity.player.Player;
 
 public class SyncedEffectMessage implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<SyncedEffectMessage> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(CookingForBlockheads.MOD_ID,
+    public static final CustomPacketPayload.Type<SyncedEffectMessage> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(
+            CookingForBlockheads.MOD_ID,
             "synced_effect"));
 
     public enum Type {
@@ -81,12 +82,13 @@ public class SyncedEffectMessage implements CustomPacketPayload {
             float offsetZ = particleOffset.getX() + 0.5f + (float) (Math.random() - 0.5f) * particleRandomOffset;
             Minecraft.getInstance().level.addParticle(particleType,
                     true,
-                    message.pos.getX() + offsetX,
-                    message.pos.getY() + offsetY,
-                    message.pos.getZ() + offsetZ,
-                    0f,
-                    0f,
-                    0f);
+                    false,
+                    (double) message.pos.getX() + offsetX,
+                    (double) message.pos.getY() + offsetY,
+                    (double) message.pos.getZ() + offsetZ,
+                    0.0,
+                    0.0,
+                    0.0);
         }
     }
 
