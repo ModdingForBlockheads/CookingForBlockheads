@@ -32,7 +32,7 @@ public class NeoForgeCookingForBlockheads {
 
     public NeoForgeCookingForBlockheads(IEventBus eventBus) {
         Balm.getEvents().onEvent(OvenItemSmeltedEvent.class, orig -> {
-            PlayerEvent.ItemSmeltedEvent event = new PlayerEvent.ItemSmeltedEvent(orig.getPlayer(), orig.getResultItem());
+            PlayerEvent.ItemSmeltedEvent event = new PlayerEvent.ItemSmeltedEvent(orig.getPlayer(), orig.getResultItem(), 1);
             NeoForge.EVENT_BUS.post(event);
         });
 
