@@ -1,6 +1,7 @@
 {
   "parent": "cookingforblockheads:block/cabinet_door_flipped",
   "textures": {
-    "all": "minecraft:block/lime_terracotta"
+    "all": "minecraft:block/lime_terracotta",
+    "particle": "minecraft:block/lime_terracotta"
   }
 }

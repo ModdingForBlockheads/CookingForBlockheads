@@ -2,6 +2,7 @@
 	"__comment": "Designed by Blay09 with Cubik Studio - https://cubik.studio",
 	"textures": {
 		"all": "minecraft:block/terracotta",
+		"particle": "minecraft:block/terracotta",
 		"handle": "cookingforblockheads:block/handle"
 	},
 	"elements": [

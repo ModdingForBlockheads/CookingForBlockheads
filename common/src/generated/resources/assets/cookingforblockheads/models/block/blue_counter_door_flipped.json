@@ -1,6 +1,7 @@
 {
   "parent": "cookingforblockheads:block/counter_door_flipped",
   "textures": {
-    "all": "minecraft:block/blue_terracotta"
+    "all": "minecraft:block/blue_terracotta",
+    "particle": "minecraft:block/blue_terracotta"
   }
 }

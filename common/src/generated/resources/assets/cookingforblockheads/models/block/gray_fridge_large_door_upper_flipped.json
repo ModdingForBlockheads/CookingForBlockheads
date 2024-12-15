@@ -4,6 +4,7 @@
     "fridge_back": "cookingforblockheads:block/gray_fridge_back",
     "fridge_inside": "cookingforblockheads:block/gray_fridge_inside",
     "fridge_side": "cookingforblockheads:block/gray_fridge_side",
-    "fridge_top": "cookingforblockheads:block/gray_fridge_top"
+    "fridge_top": "cookingforblockheads:block/gray_fridge_top",
+    "particle": "cookingforblockheads:block/gray_fridge_side"
   }
 }

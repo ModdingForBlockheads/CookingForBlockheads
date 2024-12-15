@@ -1,6 +1,7 @@
 {
   "parent": "cookingforblockheads:block/counter_door",
   "textures": {
-    "all": "minecraft:block/black_terracotta"
+    "all": "minecraft:block/black_terracotta",
+    "particle": "minecraft:block/black_terracotta"
   }
 }

@@ -2,6 +2,7 @@
 	"credit": "Designed by Blay09 with Cubik Studio - https://cubik.studio",
 	"textures": {
 		"all": "block/terracotta",
+		"particle": "block/terracotta",
 		"handle": "cookingforblockheads:block/handle"
 	},
 	"elements": [

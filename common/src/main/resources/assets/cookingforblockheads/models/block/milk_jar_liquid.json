@@ -1,7 +1,8 @@
 {
   "__comment": "Designed by Blay09 with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net (Sub Model: Liquid)",
   "textures": {
-    "milk": "cookingforblockheads:block/milk"
+    "milk": "cookingforblockheads:block/milk",
+    "particle": "cookingforblockheads:block/milk"
   },
   "elements": [
     {

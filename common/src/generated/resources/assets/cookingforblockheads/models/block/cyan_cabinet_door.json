@@ -1,6 +1,7 @@
 {
   "parent": "cookingforblockheads:block/cabinet_door",
   "textures": {
-    "all": "minecraft:block/cyan_terracotta"
+    "all": "minecraft:block/cyan_terracotta",
+    "particle": "minecraft:block/cyan_terracotta"
   }
 }

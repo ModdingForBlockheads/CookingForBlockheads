@@ -1,8 +1,9 @@
 {
 	"credit": "Designed by Blay09 with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net (Sub Model: Door)",
 	"textures": {
-		"fridge_side": "cookingforblockheads:block/fridge_side",
-		"fridge_top": "cookingforblockheads:block/fridge_top"
+		"fridge_side": "cookingforblockheads:block/white_fridge_side",
+		"fridge_top": "cookingforblockheads:block/white_fridge_top",
+		"particle": "cookingforblockheads:block/white_fridge_side"
 	},
 	"elements": [
 		{
