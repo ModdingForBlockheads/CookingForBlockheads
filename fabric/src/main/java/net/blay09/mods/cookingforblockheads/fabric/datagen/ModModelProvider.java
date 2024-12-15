@@ -5,6 +5,7 @@ import net.blay09.mods.cookingforblockheads.block.*;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.core.Direction;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.createBooleanModelDispatch;
 import static net.minecraft.client.data.models.BlockModelGenerators.createHorizontalFacingDispatch;
+import static net.minecraft.client.data.models.model.TextureMapping.getBlockTexture;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -51,6 +53,7 @@ public class ModModelProvider extends FabricModelProvider {
             blockStateModelGenerator.createNonTemplateHorizontalBlock(counter);
             blockStateModelGenerator.registerSimpleItemModel(counter, ModelLocationUtils.getModelLocation(counter.asItem()));
 
+            textureMapping.putForced(TextureSlot.PARTICLE, getBlockTexture(getTerracottaByColor(counter.getColor())));
             final var counterDoorTemplate = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/counter_door")),
                     Optional.empty(), TextureSlot.ALL);
             counterDoorTemplate.createWithSuffix(counter, "_door", textureMapping, blockStateModelGenerator.modelOutput);
@@ -68,6 +71,7 @@ public class ModModelProvider extends FabricModelProvider {
             blockStateModelGenerator.createNonTemplateHorizontalBlock(cabinet);
             blockStateModelGenerator.registerSimpleItemModel(cabinet, ModelLocationUtils.getModelLocation(cabinet.asItem()));
 
+            textureMapping.putForced(TextureSlot.PARTICLE, getBlockTexture(getTerracottaByColor(cabinet.getColor())));
             final var cabinetDoorTemplate = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/cabinet_door")),
                     Optional.empty(), TextureSlot.ALL);
             cabinetDoorTemplate.createWithSuffix(cabinet, "_door", textureMapping, blockStateModelGenerator.modelOutput);
@@ -573,6 +577,7 @@ public class ModModelProvider extends FabricModelProvider {
         textureMapping.putForced(TextureSlot.create("fridge_top"), ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/" + colorName + "_fridge_top"));
         textureMapping.putForced(TextureSlot.create("fridge_side"), ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/" + colorName + "_fridge_side"));
         textureMapping.putForced(TextureSlot.create("fridge_inside"), ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/" + colorName + "_fridge_inside"));
+        textureMapping.putForced(TextureSlot.create("particle"), ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "block/" + colorName + "_fridge_side"));
         return textureMapping;
     }
 
