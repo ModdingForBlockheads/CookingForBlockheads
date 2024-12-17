@@ -1,1 +1,1 @@
-- Updated to Minecraft 1.21.3
+- Fixed hoppers not inserting into CFB containers on NeoForge
