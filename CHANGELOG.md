@@ -1,1 +1,2 @@
-- Updated to Minecraft 1.21.4
+- Fixed model errors being logged
+- Fixed hoppers not inserting into CFB containers on NeoForge
