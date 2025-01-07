@@ -413,7 +413,7 @@ public class KitchenMenu extends AbstractContainerMenu {
     }
 
     public void updateCraftableSlots() {
-        int i = scrollOffset * 5;
+        int i = scrollOffset * 3;
         for (final var slot : recipeListingSlots) {
             if (i < filteredCraftables.size()) {
                 final var craftable = filteredCraftables.get(i);
