@@ -106,7 +106,7 @@ public class KitchenScreen extends AbstractContainerScreen<KitchenMenu> {
             return false;
         }
 
-        if (menu.getSelectedRecipe() != null && mouseX >= leftPos + 114 && mouseY >= topPos + 10 && mouseX < leftPos + 168 && mouseY < topPos + 64) {
+        if (menu.getSelectedRecipe() != null && mouseX >= leftPos + 24 && mouseY >= topPos + 20 && mouseX < leftPos + 78 && mouseY < topPos + 74) {
             Slot slot = ((AbstractContainerScreenAccessor) this).getHoveredSlot();
             if (slot instanceof CraftMatrixFakeSlot fakeSlot && fakeSlot.getVisibleStacks().size() > 1) {
                 final var lockedInput = fakeSlot.scrollDisplayListAndLock(deltaY > 0 ? -1 : 1);
