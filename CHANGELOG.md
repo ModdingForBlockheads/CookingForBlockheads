@@ -1,1 +1,2 @@
-- Fixed scrolling behaviour in recipe list (by kylev)
+- Fixed scrolling of ingredient choices in craft matrix (by KyleV)
+- Fixed scrolling behaviour in recipe list (by KyleV)
