@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "package": "net.blay09.mods.cookingforblockheads.forge.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "cookingforblockheads.refmap.json",
   "mixins": [
   ],
   "client": [
